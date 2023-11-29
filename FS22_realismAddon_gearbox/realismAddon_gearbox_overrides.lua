@@ -333,8 +333,10 @@ function realismAddon_gearbox_overrides.update(self, superFunc, dt)
 			self.lastTurboScale = self.lastTurboScale * 0.95 + ((self.lastMotorRpm - math.max(self.lastPtoRpm or self.minRpm, self.minRpm)) / (self.maxRpm - self.minRpm)*self.smoothedLoadPercentage) * 0.05
 			if self.lastAcceleratorPedal == 0 or self.minGearRatio == 0 then
 				self.blowOffValveState = self.lastTurboScale
+				print("1", self.blowOffValveState)
 			else
 				self.blowOffValveState = 0
+				print("2", self.blowOffValveState)
 			end
 	
 			-- to stop the repeating sound, stop it after playing once
