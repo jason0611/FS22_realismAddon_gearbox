@@ -299,7 +299,6 @@ function realismAddon_gearbox_overrides.update(self, superFunc, dt)
 		
 		-- finally set the new RPM values
 		if vehicle.isServer then	
-
 			-- setLastRpm does have some smoothing included 	
 			-- we do some smoothing before anyways because otherwise it will false-register fast rpm changes and inject load 
 			-- TO DO :check if we deactivate the smoothing on dedicated servers because due to synching its all slower anyways and already reacts slower than we want 
@@ -311,12 +310,45 @@ function realismAddon_gearbox_overrides.update(self, superFunc, dt)
 			-- set last rpm 
 			self:setLastRpm(self.clampedMotorRpm)
 
+			-- s4tn start
+			-- to stop the repeating sound, stop it after playing once
+			if self.spec_motorized.motor.blowOffValveState > 0 then
+				if not g_soundManager:getIsSamplePlaying(vehicle.spec_motorized.samples.blowOffValve) then
+					g_soundManager:playSample(vehicle.spec_motorized.samples.blowOffValve)
+				end
+			else
+				if g_soundManager:getIsSamplePlaying(vehicle.spec_motorized.samples.blowOffValve) then
+					g_soundManager:stopSample(vehicle.spec_motorized.samples.blowOffValve)
+				end
+			end
+			-- s4tn end
+
 			self.lastPtoRpm = self.clampedMotorRpm;			
 		
 			-- for the equalizedMotorRpm we want heavy smoothing still, though not sure what equalizedMotorRpm is used for in Fs22 I don't think much, maybe in multiplayer  
 			self.equalizedMotorRpm = (self.equalizedMotorRpm * 0.9) + ( 0.1 * clampedMotorRpm);
-		end		
+		
+		-- s4tn start
+		elseif g_client then
+			self.lastTurboScale = self.lastTurboScale * 0.95 + ((self.lastMotorRpm - math.max(self.lastPtoRpm or self.minRpm, self.minRpm)) / (self.maxRpm - self.minRpm)*self.smoothedLoadPercentage) * 0.05
+			if self.lastAcceleratorPedal == 0 or self.minGearRatio == 0 then
+				self.blowOffValveState = self.lastTurboScale
+			else
+				self.blowOffValveState = 0
+			end
 	
+			-- to stop the repeating sound, stop it after playing once
+			if self.blowOffValveState > 0 then
+				if not g_soundManager:getIsSamplePlaying(vehicle.spec_motorized.samples.blowOffValve) then
+					g_soundManager:playSample(vehicle.spec_motorized.samples.blowOffValve)
+				end
+			else
+				if g_soundManager:getIsSamplePlaying(vehicle.spec_motorized.samples.blowOffValve) then
+					g_soundManager:stopSample(vehicle.spec_motorized.samples.blowOffValve)
+				end
+			end
+		-- s4tn end	
+		end		
 		
 		if vehicle.isServer then
 		
