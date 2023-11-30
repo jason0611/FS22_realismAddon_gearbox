@@ -312,7 +312,7 @@ function realismAddon_gearbox_overrides.update(self, superFunc, dt)
 
 			-- s4tn start
 			-- to stop the repeating sound, stop it after playing once
-			if self.spec_motorized.motor.blowOffValveState > 0 then
+			if self.blowOffValveState > 0 then
 				if not g_soundManager:getIsSamplePlaying(vehicle.spec_motorized.samples.blowOffValve) then
 					g_soundManager:playSample(vehicle.spec_motorized.samples.blowOffValve)
 				end
