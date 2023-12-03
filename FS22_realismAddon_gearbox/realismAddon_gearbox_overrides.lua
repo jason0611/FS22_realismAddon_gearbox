@@ -313,10 +313,12 @@ function realismAddon_gearbox_overrides.update(self, superFunc, dt)
 			-- s4tn start
 			-- to stop the repeating sound, stop it after playing once
 			if self.blowOffValveState > 0 then
+				print("1", self.blowOffValveState)
 				if not g_soundManager:getIsSamplePlaying(vehicle.spec_motorized.samples.blowOffValve) then
 					g_soundManager:playSample(vehicle.spec_motorized.samples.blowOffValve)
 				end
 			else
+				print("0", self.blowOffValveState)
 				if g_soundManager:getIsSamplePlaying(vehicle.spec_motorized.samples.blowOffValve) then
 					g_soundManager:stopSample(vehicle.spec_motorized.samples.blowOffValve)
 				end
@@ -333,10 +335,10 @@ function realismAddon_gearbox_overrides.update(self, superFunc, dt)
 			self.lastTurboScale = self.lastTurboScale * 0.95 + ((self.lastMotorRpm - math.max(self.lastPtoRpm or self.minRpm, self.minRpm)) / (self.maxRpm - self.minRpm)*self.smoothedLoadPercentage) * 0.05
 			if self.lastAcceleratorPedal == 0 or self.minGearRatio == 0 then
 				self.blowOffValveState = self.lastTurboScale
-				print("1", self.blowOffValveState)
+				print("2", self.blowOffValveState)
 			else
 				self.blowOffValveState = 0
-				print("2", self.blowOffValveState)
+				print("-0", self.blowOffValveState)
 			end
 	
 			-- to stop the repeating sound, stop it after playing once
