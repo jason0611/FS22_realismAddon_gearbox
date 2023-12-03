@@ -152,7 +152,7 @@ end
 -- function to return if vehicle and settings are manual 
 function realismAddon_gearbox_overrides.checkIsManual(motor)
 	local isManualTransmission = motor.backwardGears ~= nil or motor.forwardGears ~= nil	
-	if isManualTransmission and motor.gearShiftMode == VehicleMotor.SHIFT_MODE_MANUAL_CLUTCH or isManualTransmission and  motor.gearShiftMode == VehicleMotor.SHIFT_MODE_MANUAL then	
+	if isManualTransmission and motor.gearShiftMode == VehicleMotor.SHIFT_MODE_MANUAL_CLUTCH then	
 		return true
 	else
 		return false
@@ -312,14 +312,16 @@ function realismAddon_gearbox_overrides.update(self, superFunc, dt)
 
 			-- s4tn start
 			-- to stop the repeating sound, stop it after playing once
-			if self.blowOffValveState > 0 then
+			if math.abs(self.blowOffValveState) > 0 then
 				print("+1", self.blowOffValveState)
 				if not g_soundManager:getIsSamplePlaying(vehicle.spec_motorized.samples.blowOffValve) then
+					print("play!")
 					g_soundManager:playSample(vehicle.spec_motorized.samples.blowOffValve)
 				end
 			else
 				print("-1", self.blowOffValveState)
 				if g_soundManager:getIsSamplePlaying(vehicle.spec_motorized.samples.blowOffValve) then
+					print("stop!")
 					g_soundManager:stopSample(vehicle.spec_motorized.samples.blowOffValve)
 				end
 			end
@@ -593,12 +595,12 @@ function realismAddon_gearbox_overrides.updateWheelsPhysics(self, superFunc, dt,
 		realismAddon_gearbox_overrides.calculateClutchRatio(self, motor)
 		
 		-- smoothing for lastAcceleratorPedal since the acceleratorPedal is on/off with my calculation, even with smoothing the load-changes are too fast (V 0.5.1.0 addition)
-		if motor.lastAcceleratorPedalME == nil then
-			motor.lastAcceleratorPedalME = motor.lastAcceleratorPedal  
-		end
-		motor.lastAcceleratorPedalME = motor.lastAcceleratorPedalME * 0.9 + acceleratorPedal * 0.1
-		
-		motor.lastAcceleratorPedal = motor.lastAcceleratorPedalME												  
+--		if motor.lastAcceleratorPedalME == nil then
+--			motor.lastAcceleratorPedalME = motor.lastAcceleratorPedal  
+--		end
+--		motor.lastAcceleratorPedalME = motor.lastAcceleratorPedalME * 0.9 + acceleratorPedal * 0.1
+--		
+--		motor.lastAcceleratorPedal = motor.lastAcceleratorPedalME												  
 							
 
 		SpecializationUtil.raiseEvent(self, "onVehiclePhysicsUpdate", acceleratorPedal, brakePedal, automaticBrake, currentSpeed)
