@@ -310,7 +310,7 @@ function realismAddon_gearbox_overrides.update(self, superFunc, dt)
 			-- set last rpm 
 			self:setLastRpm(self.clampedMotorRpm)
 
-			-- s4tn start
+			--[[ s4tn start
 			-- to stop the repeating sound, stop it after playing once
 			if math.abs(self.blowOffValveState) > 0 then
 				print("+1", self.blowOffValveState)
@@ -325,14 +325,14 @@ function realismAddon_gearbox_overrides.update(self, superFunc, dt)
 					g_soundManager:stopSample(vehicle.spec_motorized.samples.blowOffValve)
 				end
 			end
-			-- s4tn end
+			-- s4tn end --]]
 
 			self.lastPtoRpm = self.clampedMotorRpm;			
 		
 			-- for the equalizedMotorRpm we want heavy smoothing still, though not sure what equalizedMotorRpm is used for in Fs22 I don't think much, maybe in multiplayer  
 			self.equalizedMotorRpm = (self.equalizedMotorRpm * 0.9) + ( 0.1 * clampedMotorRpm);
 		
-		-- s4tn start
+		--[[ s4tn start
 		elseif g_client then
 			self.lastTurboScale = self.lastTurboScale * 0.95 + ((self.lastMotorRpm - math.max(self.lastPtoRpm or self.minRpm, self.minRpm)) / (self.maxRpm - self.minRpm)*self.smoothedLoadPercentage) * 0.05
 			if self.lastAcceleratorPedal == 0 or self.minGearRatio == 0 then
@@ -353,7 +353,7 @@ function realismAddon_gearbox_overrides.update(self, superFunc, dt)
 					g_soundManager:stopSample(vehicle.spec_motorized.samples.blowOffValve)
 				end
 			end
-		-- s4tn end	
+		-- s4tn end	--]]
 		end		
 		
 		if vehicle.isServer then
