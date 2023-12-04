@@ -556,6 +556,7 @@ function realismAddon_gearbox_overrides.updateWheelsPhysics(self, superFunc, dt,
 		-- better clutch feel, new ratio calc 
 		realismAddon_gearbox_overrides.calculateClutchRatio(self, motor)
 		
+--[[	
 		-- smoothing for lastAcceleratorPedal since the acceleratorPedal is on/off with my calculation, even with smoothing the load-changes are too fast (V 0.5.1.0 addition)
 		if motor.lastAcceleratorPedalME == nil then
 			motor.lastAcceleratorPedalME = motor.lastAcceleratorPedal  
@@ -563,7 +564,7 @@ function realismAddon_gearbox_overrides.updateWheelsPhysics(self, superFunc, dt,
 		motor.lastAcceleratorPedalME = motor.lastAcceleratorPedalME * 0.9 + acceleratorPedal * 0.1
 		
 		motor.lastAcceleratorPedal = motor.lastAcceleratorPedalME												  
-							
+--]]							
 
 		SpecializationUtil.raiseEvent(self, "onVehiclePhysicsUpdate", acceleratorPedal, brakePedal, automaticBrake, currentSpeed)
 
