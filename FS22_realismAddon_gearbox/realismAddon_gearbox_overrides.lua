@@ -310,6 +310,7 @@ function realismAddon_gearbox_overrides.update(self, superFunc, dt)
 			
 			-- set last rpm 
 			self:setLastRpm(self.clampedMotorRpm)
+			self.lastTurboScale = self.lastTurboScale * 2
 
 			self.lastPtoRpm = self.clampedMotorRpm;			
 		
