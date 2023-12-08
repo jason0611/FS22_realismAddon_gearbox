@@ -310,9 +310,24 @@ function realismAddon_gearbox_overrides.update(self, superFunc, dt)
 			
 			-- set last rpm 
 			self:setLastRpm(self.clampedMotorRpm)
-			self.lastTurboScale = self.lastTurboScale * 2
+			self.lastTurboScale = math.abs(self.lastTurboScale) * 2
 
-			self.lastPtoRpm = self.clampedMotorRpm;			
+			self.lastPtoRpm = self.clampedMotorRpm;	
+
+			-- calculate turbo speed scale depending on rpm and motor load
+			local rpmPercentage = (self.lastMotorRpm - math.max(self.lastPtoRpm or self.minRpm, self.minRpm)) / (self.maxRpm - self.minRpm)
+			local targetTurboRpm = rpmPercentage * self:getSmoothLoadPercentage()
+			self.lastTurboScale = self.lastTurboScale * 0.95 + targetTurboRpm * 0.05
+
+			if self.lastMotorRpm > self.minRpm * 1.5 then
+				if self.lastAcceleratorPedal == 0 or (self.minGearRatio == 0 and self.autoGearChangeTime > 0) then
+					self.blowOffValveState = self.lastTurboScale
+				else
+					self.blowOffValveState = 0
+				end
+			else
+				self.blowOffValveState = 0
+			end
 		
 			-- for the equalizedMotorRpm we want heavy smoothing still, though not sure what equalizedMotorRpm is used for in Fs22 I don't think much, maybe in multiplayer  
 			self.equalizedMotorRpm = (self.equalizedMotorRpm * 0.9) + ( 0.1 * clampedMotorRpm);
