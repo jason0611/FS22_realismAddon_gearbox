@@ -314,7 +314,8 @@ function realismAddon_gearbox_overrides.update(self, superFunc, dt)
 			self.lastPtoRpm = self.clampedMotorRpm;			
 		
 			-- for the equalizedMotorRpm we want heavy smoothing still, though not sure what equalizedMotorRpm is used for in Fs22 I don't think much, maybe in multiplayer  
-			self.equalizedMotorRpm = (self.equalizedMotorRpm * 0.9) + ( 0.1 * clampedMotorRpm);
+			--self.equalizedMotorRpm = (self.equalizedMotorRpm * 0.9) + ( 0.1 * clampedMotorRpm);
+			self.equalizedMotorRpm = clampedMotorRpm
 		end		
 	
 		
@@ -555,7 +556,8 @@ function realismAddon_gearbox_overrides.updateWheelsPhysics(self, superFunc, dt,
 		
 		-- better clutch feel, new ratio calc 
 		realismAddon_gearbox_overrides.calculateClutchRatio(self, motor)
-		
+
+--[[ Disabled for blowoff		
 		-- smoothing for lastAcceleratorPedal since the acceleratorPedal is on/off with my calculation, even with smoothing the load-changes are too fast (V 0.5.1.0 addition)
 		if motor.lastAcceleratorPedalME == nil then
 			motor.lastAcceleratorPedalME = motor.lastAcceleratorPedal  
@@ -563,7 +565,7 @@ function realismAddon_gearbox_overrides.updateWheelsPhysics(self, superFunc, dt,
 		motor.lastAcceleratorPedalME = motor.lastAcceleratorPedalME * 0.9 + acceleratorPedal * 0.1
 		
 		motor.lastAcceleratorPedal = motor.lastAcceleratorPedalME												  
-							
+--]]
 
 		SpecializationUtil.raiseEvent(self, "onVehiclePhysicsUpdate", acceleratorPedal, brakePedal, automaticBrake, currentSpeed)
 
