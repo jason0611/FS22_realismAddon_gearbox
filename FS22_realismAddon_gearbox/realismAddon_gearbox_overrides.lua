@@ -290,12 +290,10 @@ function realismAddon_gearbox_overrides.update(self, superFunc, dt)
 				--vehicle:stopMotor()
 				clampedMotorRpm = self.minRpm;
 				self.lastRealMotorRpm = self.minRpm;
-			end;	
-
-			-- clamp so no negative value 
-			clampedMotorRpm = math.max(clampedMotorRpm, 0)	
-
+			end;
 		end
+		-- clamp so no negative value 
+		clampedMotorRpm = math.max(clampedMotorRpm, 0)
 		
 		-- finally set the new RPM values
 		if vehicle.isServer then	
